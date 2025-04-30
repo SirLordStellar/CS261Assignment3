@@ -68,9 +68,10 @@ int queue_from_stacks_isempty(struct queue_from_stacks* queue) {
  *   value - the new value to be enqueueed onto the queue
  */
 void queue_from_stacks_enqueue(struct queue_from_stacks* queue, int value) {
-  stack_push(queue -> s1, value);
   if (stack_isempty(queue -> s2)) {
-    stack_push(queue -> s2, stack_pop(queue -> s1));
+    stack_push(queue -> s2, value);
+  } else {
+    stack_push(queue -> s1, value);
   }
 }
 
@@ -104,8 +105,10 @@ int queue_from_stacks_front(struct queue_from_stacks* queue) {
  */
 int queue_from_stacks_dequeue(struct queue_from_stacks* queue) {
   int toreturn = stack_pop(queue -> s2);
-  while (stack_isempty(queue -> s2) && !stack_isempty(queue -> s1)) {
-    stack_push(queue -> s2, stack_pop(queue -> s1));
+  if (stack_isempty(queue -> s2) && !stack_isempty(queue -> s1)) {
+    while(!stack_isempty(queue -> s1)) {
+      stack_push(queue -> s2, stack_pop(queue -> s1));
+    }
   }
   return toreturn;
 }
